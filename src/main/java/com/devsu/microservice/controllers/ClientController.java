@@ -43,7 +43,7 @@ public class ClientController {
         ClientDto newClient = clientService.createClient(client);
         URI location = ServletUriComponentsBuilder.fromCurrentRequestUri()
                 .path("/{id}")
-                .buildAndExpand(newClient.getPersonId())
+                .buildAndExpand(newClient.getId())
                 .toUri();
         return ResponseEntity.created(location).body(newClient);
     }

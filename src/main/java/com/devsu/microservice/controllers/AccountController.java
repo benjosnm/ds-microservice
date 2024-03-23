@@ -1,7 +1,9 @@
 package com.devsu.microservice.controllers;
 
 import com.devsu.microservice.dto.AccountDto;
+import com.devsu.microservice.dto.TransactionDto;
 import com.devsu.microservice.services.AccountService;
+import com.devsu.microservice.services.TransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +22,11 @@ import java.util.List;
 @RequestMapping("/cuentas")
 public class AccountController {
     private final AccountService accountService;
+    private final TransactionService transactionService;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, TransactionService transactionService) {
         this.accountService = accountService;
+        this.transactionService = transactionService;
     }
 
     @GetMapping
@@ -33,6 +37,11 @@ public class AccountController {
     @GetMapping("{id}")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable Long id) {
         return ResponseEntity.of(accountService.getAccountById(id));
+    }
+
+    @GetMapping("{accountId}/movimientos")
+    public List<TransactionDto> getTransactionsByAccountId(@PathVariable Long accountId) {
+        return transactionService.getTransactionsByAccount(accountId);
     }
 
     @PostMapping

@@ -1,5 +1,6 @@
 package com.devsu.microservice.entities;
 
+import com.devsu.microservice.dto.TransactionDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
@@ -23,24 +25,34 @@ public class TransactionEntity {
     @Column(name = "transaction_id")
     private Long id;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    @CreatedDate
     private Date date;
     private String type;
     private BigDecimal amount;
     private BigDecimal balance;
     @ManyToOne(targetEntity = AccountEntity.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
-    private AccountEntity accountEntity;
+    private AccountEntity account;
 
     public TransactionEntity() {
     }
 
-    public TransactionEntity(Long id, Date date, String type, BigDecimal amount, BigDecimal balance, AccountEntity accountEntity) {
+    public TransactionEntity(Long id, Date date, String type, BigDecimal amount, BigDecimal balance,
+                             AccountEntity accountEntity) {
         this.id = id;
         this.date = date;
         this.type = type;
         this.amount = amount;
         this.balance = balance;
-        this.accountEntity = accountEntity;
+        this.account = accountEntity;
+    }
+
+    public TransactionEntity(TransactionDto transactionDto) {
+        this.id = transactionDto.getId();
+        this.date = transactionDto.getDate();
+        this.type = transactionDto.getType().name();
+        this.amount = transactionDto.getAmount();
+        this.balance = transactionDto.getBalance();
     }
 
     public Long getId() {
@@ -84,11 +96,11 @@ public class TransactionEntity {
     }
 
     public AccountEntity getAccount() {
-        return accountEntity;
+        return account;
     }
 
     public void setAccount(AccountEntity accountEntity) {
-        this.accountEntity = accountEntity;
+        this.account = accountEntity;
     }
 
     @Override
@@ -96,12 +108,12 @@ public class TransactionEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TransactionEntity that = (TransactionEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(date, that.date) && Objects.equals(type, that.type) && Objects.equals(amount, that.amount) && Objects.equals(balance, that.balance) && Objects.equals(accountEntity, that.accountEntity);
+        return Objects.equals(id, that.id) && Objects.equals(date, that.date) && Objects.equals(type, that.type) && Objects.equals(amount, that.amount) && Objects.equals(balance, that.balance) && Objects.equals(account, that.account);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, type, amount, balance, accountEntity);
+        return Objects.hash(id, date, type, amount, balance, account);
     }
 
     @Override
@@ -112,7 +124,7 @@ public class TransactionEntity {
                 ", type='" + type + '\'' +
                 ", amount=" + amount +
                 ", balance=" + balance +
-                ", account=" + accountEntity +
+                ", account=" + account +
                 '}';
     }
 }
