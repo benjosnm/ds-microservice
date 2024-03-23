@@ -34,14 +34,12 @@ public class ClientDto extends PersonDto {
         super.setBirthDate(clientEntity.getPerson().getBirthDate());
     }
 
-    @Override
-    public Long getPersonId() {
+    public Long getId() {
         return id;
     }
 
-    @Override
-    public void setPersonId(Long personId) {
-        this.id = personId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getPwd() {
