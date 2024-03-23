@@ -1,7 +1,6 @@
 package com.devsu.microservice.dto;
 
-import com.devsu.microservice.entities.Client;
-import com.devsu.microservice.entities.ClientStatus;
+import com.devsu.microservice.entities.ClientEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
@@ -10,21 +9,21 @@ public class ClientDto extends PersonDto {
     private Long id;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String pwd;
-    private ClientStatus status;
+    private BaseStatus status;
 
     public ClientDto() {
     }
 
-    public ClientDto(Long id, String pwd, ClientStatus status) {
+    public ClientDto(Long id, String pwd, BaseStatus status) {
         this.id = id;
         this.pwd = pwd;
         this.status = status;
     }
 
-    public ClientDto(Client clientEntity) {
+    public ClientDto(ClientEntity clientEntity) {
         this.id = clientEntity.getId();
         this.pwd = clientEntity.getPwd();
-        this.status = ClientStatus.valueOf(clientEntity.getStatus());
+        this.status = BaseStatus.valueOf(clientEntity.getStatus());
         super.setFirstName(clientEntity.getPerson().getFirstName());
         super.setLastName(clientEntity.getPerson().getLastName());
         super.setPersonId(clientEntity.getPerson().getId());
@@ -50,11 +49,11 @@ public class ClientDto extends PersonDto {
         this.pwd = pwd;
     }
 
-    public ClientStatus getStatus() {
+    public BaseStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ClientStatus status) {
+    public void setStatus(BaseStatus status) {
         this.status = status;
     }
 

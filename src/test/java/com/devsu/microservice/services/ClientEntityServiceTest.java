@@ -1,9 +1,9 @@
 package com.devsu.microservice.services;
 
-import com.devsu.microservice.dao.ClientRepository;
+import com.devsu.microservice.entities.ClientEntity;
+import com.devsu.microservice.repositories.ClientRepository;
 import com.devsu.microservice.dto.ClientDto;
-import com.devsu.microservice.entities.Client;
-import com.devsu.microservice.entities.Person;
+import com.devsu.microservice.entities.PersonEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ClientServiceTest {
+class ClientEntityServiceTest {
     @Mock
     private ClientRepository clientRepository;
 
@@ -29,8 +29,8 @@ class ClientServiceTest {
 
     @Test
     void getClients() {
-        List<Client> clients = generateClientsTestData(5);
-        when(clientRepository.findAll()).thenReturn(clients);
+        List<ClientEntity> clientEntities = generateClientsTestData(5);
+        when(clientRepository.findAll()).thenReturn(clientEntities);
 
         List<ClientDto> result = clientService.getClients();
 
@@ -43,23 +43,23 @@ class ClientServiceTest {
 
     @Test
     void getClient() {
-        Client client = generateClientsTestData(1).get(0);
-        when(clientRepository.findById(client.getId())).thenReturn(java.util.Optional.of(client));
+        ClientEntity clientEntity = generateClientsTestData(1).get(0);
+        when(clientRepository.findById(clientEntity.getId())).thenReturn(java.util.Optional.of(clientEntity));
 
-        ClientDto result = clientService.getClientById(client.getId()).get();
+        ClientDto result = clientService.getClientById(clientEntity.getId()).get();
 
         assertAll(
                 () -> assertNotNull(result),
-                () -> assertEquals(1L, client.getId())
+                () -> assertEquals(1L, clientEntity.getId())
         );
     }
 
     @Test
     void createClient() {
-        Client client = generateClientsTestData(1).get(0);
-        when(clientRepository.save(any(Client.class))).thenReturn(client);
+        ClientEntity clientEntity = generateClientsTestData(1).get(0);
+        when(clientRepository.save(any(ClientEntity.class))).thenReturn(clientEntity);
 
-        ClientDto result = clientService.createClient(new ClientDto(client));
+        ClientDto result = clientService.createClient(new ClientDto(clientEntity));
 
         assertAll(
                 () -> assertNotNull(result),
@@ -69,14 +69,14 @@ class ClientServiceTest {
 
     @Test
     void updateClient() {
-        Client client = generateClientsTestData(1).get(0);
-        when(clientRepository.findById(client.getId())).thenReturn(java.util.Optional.of(client));
+        ClientEntity clientEntity = generateClientsTestData(1).get(0);
+        when(clientRepository.findById(clientEntity.getId())).thenReturn(java.util.Optional.of(clientEntity));
 
-        client.getPerson().setFirstName("Juan-updated");
-        client.getPerson().setLastName("Perez-updated");
-        when(clientRepository.save(any(Client.class))).thenReturn(client);
+        clientEntity.getPerson().setFirstName("Juan-updated");
+        clientEntity.getPerson().setLastName("Perez-updated");
+        when(clientRepository.save(any(ClientEntity.class))).thenReturn(clientEntity);
 
-        Optional<ClientDto> result = clientService.updateClient(client.getId(), new ClientDto(client));
+        Optional<ClientDto> result = clientService.updateClient(clientEntity.getId(), new ClientDto(clientEntity));
 
         assertAll(
                 () -> assertNotNull(result),
@@ -89,16 +89,16 @@ class ClientServiceTest {
 
     @Test
     void patchClient() {
-        Client client = generateClientsTestData(1).get(0);
-        when(clientRepository.findById(client.getId())).thenReturn(java.util.Optional.of(client));
+        ClientEntity clientEntity = generateClientsTestData(1).get(0);
+        when(clientRepository.findById(clientEntity.getId())).thenReturn(java.util.Optional.of(clientEntity));
 
         ClientDto clientDto = new ClientDto();
         clientDto.setFirstName("Juan-patched");
         clientDto.setPwd("patched-pwd");
 
-        when(clientRepository.save(any(Client.class))).thenReturn(client);
+        when(clientRepository.save(any(ClientEntity.class))).thenReturn(clientEntity);
 
-        Optional<ClientDto> result = clientService.patchClient(client.getId(), clientDto);
+        Optional<ClientDto> result = clientService.patchClient(clientEntity.getId(), clientDto);
 
         assertAll(
                 () -> assertNotNull(result),
@@ -111,21 +111,21 @@ class ClientServiceTest {
 
     @Test
     void deleteClient() {
-        Client client = generateClientsTestData(1).get(0);
-        when(clientRepository.findById(client.getId())).thenReturn(java.util.Optional.of(client));
+        ClientEntity clientEntity = generateClientsTestData(1).get(0);
+        when(clientRepository.findById(clientEntity.getId())).thenReturn(java.util.Optional.of(clientEntity));
 
-        boolean result = clientService.deleteClient(client.getId());
+        boolean result = clientService.deleteClient(clientEntity.getId());
 
         assertTrue(result);
     }
 
-    private List<Client> generateClientsTestData(int size) {
-        List<Client> result = new ArrayList<>();
+    private List<ClientEntity> generateClientsTestData(int size) {
+        List<ClientEntity> result = new ArrayList<>();
 
         for (int i = 1; i <= size; i++) {
-            result.add(new Client(
+            result.add(new ClientEntity(
                     (long) i,
-                    new Person(
+                    new PersonEntity(
                             (long) i,
                             "Juan" + i,
                             "Perez" + i,

@@ -14,24 +14,24 @@ import java.util.Objects;
 
 @Entity
 @Table(name="clients")
-public class Client {
+public class ClientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="client_id")
     private Long id;
-    @OneToOne(targetEntity = Person.class, cascade = CascadeType.PERSIST)
+    @OneToOne(targetEntity = PersonEntity.class, cascade = CascadeType.PERSIST)
     @JoinColumn(name="person_id")
-    private Person person;
+    private PersonEntity personEntity;
 
     private String pwd;
     private String status;
 
-    public Client() {
+    public ClientEntity() {
     }
 
-    public Client(Long id, Person person, String pwd, String status) {
+    public ClientEntity(Long id, PersonEntity personEntity, String pwd, String status) {
         this.id = id;
-        this.person = person;
+        this.personEntity = personEntity;
         this.pwd = pwd;
         this.status = status;
     }
@@ -44,12 +44,12 @@ public class Client {
         this.id = id;
     }
 
-    public Person getPerson() {
-        return person;
+    public PersonEntity getPerson() {
+        return personEntity;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setPerson(PersonEntity personEntity) {
+        this.personEntity = personEntity;
     }
 
     public String getPwd() {
@@ -72,20 +72,20 @@ public class Client {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Client client = (Client) o;
-        return Objects.equals(id, client.id) && Objects.equals(person, client.person) && Objects.equals(pwd, client.pwd) && Objects.equals(status, client.status);
+        ClientEntity clientEntity = (ClientEntity) o;
+        return Objects.equals(id, clientEntity.id) && Objects.equals(personEntity, clientEntity.personEntity) && Objects.equals(pwd, clientEntity.pwd) && Objects.equals(status, clientEntity.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, person, pwd, status);
+        return Objects.hash(id, personEntity, pwd, status);
     }
 
     @Override
     public String toString() {
         return "Client{" +
                 "id=" + id +
-                ", person=" + person +
+                ", person=" + personEntity +
                 ", status='" + status + '\'' +
                 '}';
     }

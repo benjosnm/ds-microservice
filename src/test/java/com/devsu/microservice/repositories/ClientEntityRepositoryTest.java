@@ -1,8 +1,7 @@
 package com.devsu.microservice.repositories;
 
-import com.devsu.microservice.dao.ClientRepository;
-import com.devsu.microservice.entities.Client;
-import com.devsu.microservice.entities.Person;
+import com.devsu.microservice.entities.ClientEntity;
+import com.devsu.microservice.entities.PersonEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 @ActiveProfiles("test")
-class ClientRepositoryTest {
+class ClientEntityRepositoryTest {
     @Autowired
     ClientRepository clientRepository;
 
@@ -33,10 +32,10 @@ class ClientRepositoryTest {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date birthDate = dateFormat.parse("1980-10-15");
-        Person person = new Person(null, "John", "Doe", "M", birthDate, "123 Main St", "1234567890");
-        Client client = new Client(null, person, "123456", "ACTIVE");
+        PersonEntity personEntity = new PersonEntity(null, "John", "Doe", "M", birthDate, "123 Main St", "1234567890");
+        ClientEntity clientEntity = new ClientEntity(null, personEntity, "123456", "ACTIVE");
 
-        Client saved = clientRepository.save(client);
+        ClientEntity saved = clientRepository.save(clientEntity);
 
         assertAll(
                 () -> assertNotNull(saved),
@@ -49,7 +48,7 @@ class ClientRepositoryTest {
 
     @Test
     void getClients() {
-        List<Client> all = clientRepository.findAll();
+        List<ClientEntity> all = clientRepository.findAll();
 
         assertAll(
                 () -> assertNotNull(all),
@@ -59,27 +58,27 @@ class ClientRepositoryTest {
 
     @Test
     void getClient() {
-        Client client = clientRepository.findById(1L).orElse(null);
+        ClientEntity clientEntity = clientRepository.findById(1L).orElse(null);
 
         assertAll(
-                () -> assertNotNull(client),
-                () -> assertNotNull(client.getId()),
-                () -> assertEquals(1L, client.getId()),
-                () -> assertNotNull(client.getPerson()),
-                () -> assertEquals("Jhon", client.getPerson().getFirstName()),
-                () -> assertEquals("Potter", client.getPerson().getLastName()),
-                () -> assertNotNull(client.getPwd()),
-                () -> assertNotNull(client.getStatus())
+                () -> assertNotNull(clientEntity),
+                () -> assertNotNull(clientEntity.getId()),
+                () -> assertEquals(1L, clientEntity.getId()),
+                () -> assertNotNull(clientEntity.getPerson()),
+                () -> assertEquals("Jhon", clientEntity.getPerson().getFirstName()),
+                () -> assertEquals("Potter", clientEntity.getPerson().getLastName()),
+                () -> assertNotNull(clientEntity.getPwd()),
+                () -> assertNotNull(clientEntity.getStatus())
         );
     }
 
     @Test
     void updateClient() {
-        Client client = clientRepository.findById(1L).orElse(null);
-        assertNotNull(client);
+        ClientEntity clientEntity = clientRepository.findById(1L).orElse(null);
+        assertNotNull(clientEntity);
 
-        client.setStatus("INACTIVE");
-        Client updated = clientRepository.save(client);
+        clientEntity.setStatus("INACTIVE");
+        ClientEntity updated = clientRepository.save(clientEntity);
 
         assertAll(
                 () -> assertNotNull(updated),

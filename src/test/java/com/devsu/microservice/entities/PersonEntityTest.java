@@ -12,16 +12,16 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class PersonTest {
+class PersonEntityTest {
     @Autowired
     private Validator validator;
 
     @Test
     void invalidPerson() {
-        Person person = new Person();
+        PersonEntity personEntity = new PersonEntity();
 
-        Set<ConstraintViolation<Person>> validationError = validator.validate(person);
-        Iterator<ConstraintViolation<Person>> iterator = validationError.iterator();
+        Set<ConstraintViolation<PersonEntity>> validationError = validator.validate(personEntity);
+        Iterator<ConstraintViolation<PersonEntity>> iterator = validationError.iterator();
 
         assertAll(
                 () -> assertFalse(validationError.isEmpty()),

@@ -1,6 +1,8 @@
 package com.devsu.microservice.controllers;
 
+import com.devsu.microservice.dto.AccountDto;
 import com.devsu.microservice.dto.ClientDto;
+import com.devsu.microservice.services.AccountService;
 import com.devsu.microservice.services.ClientService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +13,14 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/clients")
+@RequestMapping("/clientes")
 public class ClientController {
     private final ClientService clientService;
+    private final AccountService accountService;
 
-    public ClientController(ClientService clientService) {
+    public ClientController(ClientService clientService, AccountService accountService) {
         this.clientService = clientService;
+        this.accountService = accountService;
     }
 
     @GetMapping
@@ -27,6 +31,11 @@ public class ClientController {
     @GetMapping("{id}")
     public ResponseEntity<ClientDto> getClientById(@PathVariable Long id) {
         return ResponseEntity.of(clientService.getClientById(id));
+    }
+
+    @GetMapping("{id}/cuentas")
+    public List<AccountDto> getAccountsByClientId(@PathVariable Long id) {
+        return accountService.getAccountsByClientId(id);
     }
 
     @PostMapping

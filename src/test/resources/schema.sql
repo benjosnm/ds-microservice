@@ -9,7 +9,7 @@ CREATE TABLE `persons`
     `phone`      varchar(100) NOT NULL
 );
 
-CREATE TABLE `clients`
+CREATE TABLE `clientEntities`
 (
     `client_id` bigint AUTO_INCREMENT PRIMARY KEY,
     `person_id` bigint      NOT NULL,

@@ -3,7 +3,6 @@ package com.devsu.microservice.entities;
 import com.devsu.microservice.dto.ClientDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -12,7 +11,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name="persons")
-public class Person {
+public class PersonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="person_id", unique = true)
@@ -22,16 +21,16 @@ public class Person {
     @NotBlank(message = "Last name is required.")
     private String lastName;
     private String gender;
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Past
     private Date birthDate;
     private String address;
     private String phone;
 
-    public Person() {
+    public PersonEntity() {
     }
 
-    public Person(Long id, String firstName, String lastName, String gender, Date birthDate, String address, String phone) {
+    public PersonEntity(Long id, String firstName, String lastName, String gender, Date birthDate, String address, String phone) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -41,7 +40,7 @@ public class Person {
         this.phone = phone;
     }
 
-    public Person(ClientDto clientDto) {
+    public PersonEntity(ClientDto clientDto) {
         this.firstName = clientDto.getFirstName();
         this.lastName = clientDto.getLastName();
         this.gender = clientDto.getGender();
@@ -110,8 +109,8 @@ public class Person {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(gender, person.gender) && Objects.equals(birthDate, person.birthDate) && Objects.equals(address, person.address) && Objects.equals(phone, person.phone);
+        PersonEntity personEntity = (PersonEntity) o;
+        return Objects.equals(id, personEntity.id) && Objects.equals(firstName, personEntity.firstName) && Objects.equals(lastName, personEntity.lastName) && Objects.equals(gender, personEntity.gender) && Objects.equals(birthDate, personEntity.birthDate) && Objects.equals(address, personEntity.address) && Objects.equals(phone, personEntity.phone);
     }
 
     @Override
