@@ -1,7 +1,14 @@
 package com.devsu.microservice.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 import java.util.Objects;
 
@@ -9,16 +16,14 @@ import java.util.Objects;
 @Table(name="clients")
 public class Client {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="client_id")
     private Long id;
-
-    @OneToOne
+    @OneToOne(targetEntity = Person.class, cascade = CascadeType.PERSIST)
     @JoinColumn(name="person_id")
     private Person person;
 
-    @JsonIgnore
     private String pwd;
-
     private String status;
 
     public Client() {

@@ -1,7 +1,9 @@
 package com.devsu.microservice.services;
 
 import com.devsu.microservice.dao.ClientRepository;
+import com.devsu.microservice.dto.ClientDto;
 import com.devsu.microservice.entities.Client;
+import com.devsu.microservice.entities.Person;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,24 +17,30 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
-    public List<Client> getClients() {
-        return clientRepository.findAll();
+    public List<ClientDto> getClients() {
+        List<Client> result = clientRepository.findAll();
+        return result.stream().map(ClientDto::new).toList();
     }
 
-    public Optional<Client> getClientById(Long id) {
-        return clientRepository.findById(id);
+    public Optional<ClientDto> getClientById(Long id) {
+        Optional<Client> clientEntity = clientRepository.findById(id);
+        return clientEntity.map(ClientDto::new);
     }
 
-    public Client createClient(Client client) {
-        return clientRepository.save(client);
+    public ClientDto createClient(ClientDto clientDto) {
+        Person person = new Person(clientDto);
+        Client client = new Client(clientDto.getPersonId(), person, clientDto.getPwd(), clientDto.getStatus().name());
+
+        return new ClientDto(clientRepository.save(client));
     }
 
-    public Optional<Client> updateClient(Long id, Client client) {
+    public Optional<ClientDto> updateClient(Long id, ClientDto clientDto) {
         Optional<Client> originalClient = clientRepository.findById(id);
 
         if(originalClient.isPresent()) {
-            client.setId(id);
-            return Optional.of(clientRepository.save(client));
+            Person person = new Person(clientDto);
+            Client client = new Client(id, person, clientDto.getPwd(), clientDto.getStatus().name());
+            return Optional.of(new ClientDto(clientRepository.save(client)));
         } else {
             return Optional.empty();
         }
@@ -49,26 +57,26 @@ public class ClientService {
         }
     }
 
-    public Optional<Client> patchClient(Long id, Client client) {
+    public Optional<ClientDto> patchClient(Long id, ClientDto client) {
         Optional<Client> originalClient = clientRepository.findById(id);
 
         if(originalClient.isPresent()) {
-            if(client.getPerson().getFirstName() != null) {
-                originalClient.get().getPerson().setFirstName(client.getPerson().getFirstName());
+            if(client.getFirstName() != null) {
+                originalClient.get().getPerson().setFirstName(client.getFirstName());
             }
-            if(client.getPerson().getLastName() != null) {
-                originalClient.get().getPerson().setLastName(client.getPerson().getLastName());
+            if(client.getLastName() != null) {
+                originalClient.get().getPerson().setLastName(client.getLastName());
             }
-            if(client.getPerson().getGender() != null) {
-                originalClient.get().getPerson().setGender(client.getPerson().getGender());
+            if(client.getGender() != null) {
+                originalClient.get().getPerson().setGender(client.getGender());
             }
             if(client.getPwd() != null) {
                 originalClient.get().setPwd(client.getPwd());
             }
             if(client.getStatus() != null) {
-                originalClient.get().setStatus(client.getStatus());
+                originalClient.get().setStatus(client.getStatus().name());
             }
-            return Optional.of(clientRepository.save(originalClient.get()));
+            return Optional.of(new ClientDto(clientRepository.save(originalClient.get())));
         } else {
             return Optional.empty();
         }

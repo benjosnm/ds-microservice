@@ -1,38 +1,25 @@
-package com.devsu.microservice.entities;
+package com.devsu.microservice.dto;
 
-import com.devsu.microservice.dto.ClientDto;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 import java.util.Objects;
 
-@Entity
-@Table(name="persons")
-public class Person {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="person_id", unique = true)
-    private Long id;
-    @NotBlank(message = "First name is required.")
+public class PersonDto {
+    private Long personId;
     private String firstName;
-    @NotBlank(message = "Last name is required.")
     private String lastName;
     private String gender;
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @Past
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date birthDate;
     private String address;
     private String phone;
 
-    public Person() {
+    public PersonDto() {
     }
 
-    public Person(Long id, String firstName, String lastName, String gender, Date birthDate, String address, String phone) {
-        this.id = id;
+    public PersonDto(Long personId, String firstName, String lastName, String gender, Date birthDate, String address, String phone) {
+        this.personId = personId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -41,21 +28,12 @@ public class Person {
         this.phone = phone;
     }
 
-    public Person(ClientDto clientDto) {
-        this.firstName = clientDto.getFirstName();
-        this.lastName = clientDto.getLastName();
-        this.gender = clientDto.getGender();
-        this.birthDate = clientDto.getBirthDate();
-        this.address = clientDto.getAddress();
-        this.phone =  clientDto.getPhone();
+    public Long getPersonId() {
+        return personId;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setPersonId(Long personId) {
+        this.personId = personId;
     }
 
     public String getFirstName() {
@@ -110,19 +88,19 @@ public class Person {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(gender, person.gender) && Objects.equals(birthDate, person.birthDate) && Objects.equals(address, person.address) && Objects.equals(phone, person.phone);
+        PersonDto personDto = (PersonDto) o;
+        return Objects.equals(personId, personDto.personId) && Objects.equals(firstName, personDto.firstName) && Objects.equals(lastName, personDto.lastName) && Objects.equals(gender, personDto.gender) && Objects.equals(birthDate, personDto.birthDate) && Objects.equals(address, personDto.address) && Objects.equals(phone, personDto.phone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, gender, birthDate, address, phone);
+        return Objects.hash(personId, firstName, lastName, gender, birthDate, address, phone);
     }
 
     @Override
     public String toString() {
-        return "Person{" +
-                "id=" + id +
+        return "PersonDto{" +
+                "id=" + personId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", gender='" + gender + '\'' +

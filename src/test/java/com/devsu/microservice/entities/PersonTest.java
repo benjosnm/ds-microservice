@@ -18,7 +18,7 @@ class PersonTest {
 
     @Test
     void invalidPerson() {
-        Person person = new Person(" ", null);
+        Person person = new Person();
 
         Set<ConstraintViolation<Person>> validationError = validator.validate(person);
         Iterator<ConstraintViolation<Person>> iterator = validationError.iterator();
